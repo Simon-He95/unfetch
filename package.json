@@ -37,7 +37,6 @@
     "dist"
   ],
   "scripts": {
-    "postinstall": "simple-git-hooks",
     "build": "tsup ./src/index.ts --format cjs,esm --dts --clean --minify",
     "dev": "npm run build -- --watch src",
     "format": "prettier --write --cache .",
@@ -67,10 +66,6 @@
     "tsx": "^3.14.0",
     "typescript": "^4.9.5",
     "vitest": "^0.15.2"
-  },
-  "simple-git-hooks": {
-    "pre-commit": "pnpm exec lint-staged --concurrent false",
-    "commit-msg": "pnpm exec tsx scripts/verifyCommit.ts $1"
   },
   "lint-staged": {
     "*": [
