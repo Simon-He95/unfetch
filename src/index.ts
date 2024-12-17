@@ -11,18 +11,23 @@ function unfetch(defaults: FetchOptions = {}) {
     })
   }
 
-  const postFetch: Request = (request, options) => {
+  const postFetch: Request = async (request, options) => {
     if (options?.body && options.body instanceof FormData) {
-      return typeof request === 'string'
-        ? apiFetch.native(joinUrl(defaults.baseURL || '', request), {
-          method: 'POST',
-          ...(options as any),
-        })
-        : apiFetch.native(joinUrl(defaults.baseURL || '', request.url), {
-          ...request,
-          method: 'POST',
-          ...options,
-        } as any)
+      const response
+        = typeof request === 'string'
+          ? await apiFetch.native(joinUrl(defaults.baseURL || '', request), {
+            method: 'POST',
+            ...(options as any),
+          })
+          : await apiFetch.native(
+            joinUrl(defaults.baseURL || '', request.url),
+            {
+              ...request,
+              method: 'POST',
+              ...options,
+            } as any,
+          )
+      return response.json()
     }
     return apiFetch(request, {
       method: 'POST',
