@@ -11,11 +11,29 @@ function unfetch(defaults: FetchOptions = {}) {
     })
   }
 
-  const postFetch: Request = (request, options) =>
-    apiFetch(request, {
+  const postFetch: Request = (request, options) => {
+    if (options?.body && options.body instanceof FormData) {
+      return apiFetch.native(
+        Object.assign(
+          typeof request === 'string'
+            ? {
+                url: defaults.baseURL
+                  ? joinUrl(defaults.baseURL, request)
+                  : request,
+              }
+            : request,
+          {
+            method: 'POST',
+            ...options,
+          },
+        ),
+      )
+    }
+    return apiFetch(request, {
       method: 'POST',
       ...options,
     })
+  }
 
   const putFetch: Request = (request, options) =>
     apiFetch(request, {
@@ -42,6 +60,10 @@ function unfetch(defaults: FetchOptions = {}) {
   ;(apiFetch as ExtendedFetch).patch = patchFetch
 
   return apiFetch
+}
+
+function joinUrl(a: string, b: string) {
+  return `${a.replace(/\/$/, '')}/${b.replace(/^\//, '')}`
 }
 
 export default unfetch
