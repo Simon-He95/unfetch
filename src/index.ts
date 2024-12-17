@@ -20,7 +20,7 @@ function unfetch(defaults: FetchOptions = {}) {
             ...(options as any),
           })
           : await apiFetch.native(
-            joinUrl(defaults.baseURL || '', request.url),
+            joinUrl(request.baseURL || defaults.baseURL || '', request.url),
             {
               ...request,
               method: 'POST',
