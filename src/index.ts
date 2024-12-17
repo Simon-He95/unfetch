@@ -13,21 +13,16 @@ function unfetch(defaults: FetchOptions = {}) {
 
   const postFetch: Request = (request, options) => {
     if (options?.body && options.body instanceof FormData) {
-      return apiFetch.native(
-        Object.assign(
-          typeof request === 'string'
-            ? {
-                url: defaults.baseURL
-                  ? joinUrl(defaults.baseURL, request)
-                  : request,
-              }
-            : request,
-          {
-            method: 'POST',
-            ...options,
-          },
-        ),
-      )
+      return typeof request === 'string'
+        ? apiFetch.native(joinUrl(defaults.baseURL || '', request), {
+          method: 'POST',
+          ...(options as any),
+        })
+        : apiFetch.native(joinUrl(defaults.baseURL || '', request.url), {
+          ...request,
+          method: 'POST',
+          ...options,
+        } as any)
     }
     return apiFetch(request, {
       method: 'POST',
