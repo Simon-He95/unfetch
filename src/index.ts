@@ -2,8 +2,8 @@ import type { FetchOptions } from 'ofetch'
 import { ofetch } from 'ofetch'
 import type { ExtendedFetch, Request } from './types'
 
-function unfetch(defaults: FetchOptions = {}) {
-  const apiFetch = ofetch.create(defaults)
+function unfetch(defaults: FetchOptions = {}): ExtendedFetch {
+  const apiFetch = ofetch.create(defaults) as ExtendedFetch
   const getFetch: Request = (request, params, options) => {
     return apiFetch(request, {
       method: 'GET',
@@ -60,11 +60,11 @@ function unfetch(defaults: FetchOptions = {}) {
       ...options,
     })
 
-  ;(apiFetch as ExtendedFetch).get = getFetch
-  ;(apiFetch as ExtendedFetch).post = postFetch
-  ;(apiFetch as ExtendedFetch).put = putFetch
-  ;(apiFetch as ExtendedFetch).delete = deleteFetch
-  ;(apiFetch as ExtendedFetch).patch = patchFetch
+  apiFetch.get = getFetch
+  apiFetch.post = postFetch
+  apiFetch.put = putFetch
+  apiFetch.delete = deleteFetch
+  apiFetch.patch = patchFetch
 
   return apiFetch
 }
